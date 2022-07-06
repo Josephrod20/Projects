@@ -1,139 +1,42 @@
+// Add all functions used from https://p5js.org/reference/
+// to the global comment for glitch to recognize the code.
 /* global
- * createCanvas, background, colorMode, HSB,height,width,ellipseMode
- * fill,ellipse, random, noFill,mousePressed,line,text,x,y,condtion
- * floor,mouseX,mouseY, keyPressed , redo, Scribble,
+ * createCanvas, background, loadImage, image
  */
 
-
-
-let board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]];
-
-let winCondtions=[
-  [[0,0],[0,1],[0,2]],
-  [[1,0],[1,1],[1,2]],
-  [[2,0],[2,1],[2,2]],
-  [[0,0],[1,0],[2,0]],
-  [[0,1],[1,1],[2,1]],
-  [[0,2],[1,2],[2,2]],
-  [[0,0],[1,1],[2,2]],
-  [[2,0],[1,1],[0,2]]
-]
-
-
-let player = ["X", "O"];
-let currentPlayer;
-let win;
+let dvdImage;
 
 function setup() {
-  createCanvas(400, 400);
-  currentPlayer = 'X';
+  createCanvas(800, 600);
+  // We only want to load the logo once.
+  dvdImage = loadImage(
+    "https://cdn.glitch.com/eaea72a4-ac6d-4777-b76e-f37d75959aa5%2Fdvd.jpeg?1515761833387"
+  );
+  //setup
+  x = 50;
+  xvelocity = 2;
+  y = 50;
+  yvelocity = 2;
 }
-
 
 function draw() {
-  background(220);
-  let w = width / 3;
-  let h = height / 3;
+  background(100);
+  // Draw the logo at the new position.
+  image(dvdImage, x, y, 200, 150);
 
-
-  
-  line(w, 0, w, height);
-  line(w * 2, 0, w * 2, height);
-  line(0, h, width, h);
-  line(0, h * 2, width, h * 2);
-
-  for (let j = 0; j < 3; j++) {
-    for (let i = 0; i < 3; i++) {
-      let x = w * i + w / 2;
-      let y = h * j + h / 2;
-      let spot = board[i][j];
-
-      textSize(32);
-      strokeWeight(4);
-      if (spot == player[1]) {
-        noFill();
-      ellipse(x, y, w / 2);
-      } else if (spot == player[0]) {
-        let xr = w / 4;
-       line(x - xr, y - xr, x + xr, y + xr);
-       line(x + xr, y - xr, x - xr, y + xr);
-      }
-      
-    }
-   
+  //move the logo
+  x += xvelocity;
+  y += yvelocity;
+  //move it left and right
+  if (x > 600) {
+    xvelocity = -3;
+  } else if (x < 0) {
+    xvelocity = 3;
   }
-
-  if(win){
-
-    fill(255)
-    text(`${win} has won`,110,200)
-    text('Press r to restart',108,250)
-  }
-  else if(fullBoard()==true){
-   fill(255)
-    text('Draw',150,200)
-    text('Press r to restart',150,300)
+  //move up and down
+  if (y > 450) {
+    yvelocity = -3;
+  } else if (y < 0) {
+    yvelocity = 3;
   }
 }
-
-
- function mousePressed(){
-   let w = width / 3;
-   let h = height / 3;
-   let row=floor(mouseY/h) ;
-   let columun=floor(mouseX/w);
-  if(board[columun][row]!=' '){
-    return
-  }
-   board[columun][row]= currentPlayer;
-   if (currentPlayer=='X'){
-     currentPlayer='O';
-   }
-   
-   else if (currentPlayer=='O'){
-     currentPlayer='X';
-   }
-  
-   win = checkWin(); 
-  
-   
- }
-
-function checkWin(){
-  
-  for(let condition of winCondtions){
-    let player0=board[condition[0][0]][condition[0][1]]
-    let player1=board[condition[1][0]][condition[1][1]]
-    let player2=board[condition[2][0]][condition[2][1]]
-if (player1==player2&&player0==player1&&player0!=' '){
-  return player1
-
-}
-  };
-  
-}
-
-
-function fullBoard(){
-  for(let j=0;j<3;j++){
-    for(let i=0;i<3;i++){
-      if(board [j][i]==' ')
-        return false ;
-    }
-  }
-  return true; 
-
-}
- 
-
-  function keyTyped(){
-    
-    if (key=== 'r'){
-     
-    board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]];
-      
-   }
-  }
-  
-
-
